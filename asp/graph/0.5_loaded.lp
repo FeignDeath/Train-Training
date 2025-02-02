@@ -4,7 +4,7 @@
 
 %% 1. Mandatory, respecting the current problem context.
 save(action(A,O,T)) :- action(A,O,T). % General rule
-save(a(A,O,T)) :- act(A,O,T). % General rule
+save(a(A,O,T)) :- a(A,O,T). % General rule
 save(at(V,A,T)):- at(V,A,T). %Custom for our solution
 %% 1. Efficiency choices, you probably want to customize these to your solution
 save(trackparts(Pos,D1,D2)):- trackparts(Pos,D1,D2). %available cell directions
