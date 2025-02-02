@@ -19,6 +19,6 @@ speed_ratio_map={1 : 1}
 #     }
 
 # malfunctions
-malfunction_rate=0/30
+malfunction_rate=1/30
 min_duration=2
 max_duration=6

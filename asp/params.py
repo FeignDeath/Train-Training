@@ -1,5 +1,7 @@
-primary=['asp/malfunctions_test.lp']
-# primary=['asp/ordered/0_input.lp','asp/ordered/1_path.lp','asp/ordered/2_conflicts.lp']
-#primary=['asp/test2.lp']
-# primary=['asp/test.lp']
-# secondary=[]
+primary=['asp/graph/0_input.lp',
+         'asp/graph/1_path.lp',
+         'asp/graph/2_output.lp']
+secondary=['asp/graph/0_input.lp',
+         'asp/graph/0.5_loaded.lp',
+         'asp/graph/1_path.lp',
+         'asp/graph/2_output.lp']
