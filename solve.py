@@ -10,6 +10,7 @@ from argparse import ArgumentParser, Namespace
 from asp import params
 from modules.api import FlatlandPlan
 from modules.convert import convert_malfunctions_to_clingo, convert_formers_to_clingo, convert_futures_to_clingo
+from modules.actionlist import build_context_from_save
 
 # clingo
 import clingo
@@ -77,10 +78,14 @@ class SimulationManager():
 
     def provide_context(self, actions, timestep, malfunctions) -> str:
         """ provide additional facts when updating list """
-        # provides malfunction information as well as previously saved atoms
-        malfunction = convert_malfunctions_to_clingo(malfunctions, timestep)
-        saved = self.save_context
-        return (malfunction + saved)
+        # actions that have already been executed
+        # wait actions that are enforced because of malfunctions
+        # future actions that were previously planned
+        # past = convert_formers_to_clingo(actions[:timestep])
+        # present = convert_malfunctions_to_clingo(malfunctions, timestep)
+        # future = convert_futures_to_clingo(actions[timestep:])
+        # return(past + present + future)
+        pass
 
     def update_actions(self, context) -> list:
         """ update list of actions following malfunction """
@@ -222,8 +227,8 @@ def main():
         new_malfs = mal.check(info)
 
         if len(new_malfs) > 0:
-            context = sim.provide_context(actions, timestep, mal.get())
-            actions = sim.update_actions(context)
+            #context = sim.provide_context(actions, timestep, mal.get())
+            actions = sim.update_actions(sim.save_context)
 
         mal.deduct() #??? where in the loop should this go - before context?
         

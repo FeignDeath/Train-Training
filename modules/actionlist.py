@@ -30,15 +30,14 @@ def to_dicts(action_list):
 
 def build_context_from_save(models):
     """
-    given a model from clingo, build a list of saved atoms
+    given a model from clingo, build an python action list
     """
-    save_list = []
+    save_list = ""
     for func in models[0]: # only the first model
         func_name = func.name
         if func_name == "save":
             context = func.arguments[0]
-            save_list.append(f"load({context}).\n")
-
+            save_list += f"load({context}).\n"
     return(save_list)
 
 def build_action_list(models):
@@ -55,5 +54,5 @@ def build_action_list(models):
             action_list.append((agent_num,action,timestep.number))
 
     sorted_list = sorted(action_list, key=lambda x: (x[2], x[0]))
-    return(to_dicts(sorted_list))
+    return(to_dicts(sorted_list), build_context_from_save(models))
 
