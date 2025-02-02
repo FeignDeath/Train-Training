@@ -176,7 +176,8 @@ def main():
     actions = sim.build_actions()
 
     timestep = 0
-    while len(actions) > timestep:
+    while len(actions[0]) > timestep:
+        print(f'rendering step {timestep}')
         # render an image
         filename = 'tmp/frames/flatland_frame_{:04d}.png'.format(timestep)
         if env_renderer is not None:
@@ -213,13 +214,14 @@ def main():
             images.append(imageio.imread(filename))
 
         # add to the log
-        for a in actions[timestep]:
-            log.add(f'{a};{timestep};{env.agents[a].position};{dir_map[env.agents[a].direction]};{state_map[env.agents[a].state]};{action_map[actions[timestep][a]]}\n')
+        for a in actions[0][timestep]:
 
-        _, _, done, info = env.step(actions[timestep])
+            log.add(f'{a};{timestep};{env.agents[a].position};{dir_map[env.agents[a].direction]};{state_map[env.agents[a].state]};{action_map[actions[0][timestep][a]]}\n')
+
+        _, _, done, info = env.step(actions[0][timestep])
 
         # end if simulation is finished
-        if done['__all__'] and timestep < len(actions)-1:
+        if done['__all__'] and timestep < len(actions[0])-1:
             warnings.warn('Simulation has reached its end before actions list has been exhausted.')
             break
 
@@ -228,6 +230,7 @@ def main():
 
         if len(new_malfs) > 0:
             #context = sim.provide_context(actions, timestep, mal.get())
+            print('MALFUNCTION :O')
             actions = sim.update_actions(sim.save_context)
 
         mal.deduct() #??? where in the loop should this go - before context?

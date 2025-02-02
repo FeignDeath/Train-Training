@@ -12,7 +12,7 @@ save(vertex(Pos,Dir)):- vertex(Pos,Dir).%trackpars + cell
 save(edge(V1,V2)):- edge(V1,V2). % connectivity between vertex(trackpart+cell)
 save(turn(Edg,Ver,Dir)):- turn(Edg,Ver,Dir). %does the edge imply a turn
 save(shared_resources(VE1,VE2)):- shared_resources(VE1,VE2). %detecting vector-edge share conflicts
-save(starttime(A,T)):- starttime(A,T). %detecting vector-edge share conflicts
+%save(starttime(A,T)):- starttime(A,T). %detecting vector-edge share conflicts
 
 
 
@@ -27,7 +27,8 @@ vertex(Pos,Dir):- load(vertex(Pos,Dir)).%trackpars + cell
 edge(V1,V2):- load(edge(V1,V2)). % connectivity between vertex(trackpart+cell)
 turn(Edg,Ver,Dir):- load(turn(Edg,Ver,Dir)). %does the edge imply a turn
 shared_resources(VE1,VE2):- load(shared_resources(VE1,VE2)). %detecting vector-edge share conflicts
-starttime(A,T):- load(starttime(A,T)). %detecting vector-edge share conflicts
+%starttime(A,T):- load(starttime(A,T)). %detecting vector-edge share conflicts
 
+#show malfunction/3.
 
 

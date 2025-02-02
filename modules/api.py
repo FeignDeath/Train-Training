@@ -29,8 +29,8 @@ class FlatlandPlan(Application):
         
         # add actions
         if self.actions is not None:
-            # print(f".join(self.actions): {' '.join(self.actions)}")
-            ctl.add('base', [], ' '.join(self.actions))
+            print(f".join(self.actions): {''.join(self.actions)}")
+            ctl.add('base', [], ''.join(self.actions))
         
         # ground the program
         ctl.ground([("base", [])], context=self)
