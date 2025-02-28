@@ -1,3 +1,2 @@
-# For using this, just overwrite asp/params.py with this file
-primary=['asp/graph_subcelld_proper/0_input.lp','asp/graph_subcelld_proper/1_path.lp','asp/graph_subcelld_proper/2_output.lp']
-secondary=['asp/graph_subcelld_proper/1_path.lp','asp/graph_subcelld_proper/2_output.lp','asp/graph_subcelld_proper/3_malfunction.lp']
+primary=['asp/graph_reschedule_naive/0_input.lp','asp/graph_reschedule_naive/1_path.lp','asp/graph_reschedule_naive/2_output.lp']
+secondary=['asp/graph_reschedule_naive/0_input.lp','asp/graph_reschedule_naive/1_path.lp','asp/graph_reschedule_naive/2_output.lp','asp/graph_reschedule_naive/3_malfunction.lp']

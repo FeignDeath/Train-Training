@@ -23,7 +23,7 @@ save(first_vertex(A,B)) :- first_vertex(A,B).
 save(last_vertex(A,B)) :- last_vertex(A,B).
 
 % train information
-save(end(A,B,C)) :- end(A,B,C).
+save(original_end(A,B,C)) :- original_end(A,B,C).
 save(train(T)) :- train(T).
 save(start(A,B,C,D)) :- start(A,B,C,D).
 save(at(V,A,T)) :- at(V,A,T).

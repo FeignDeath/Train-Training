@@ -5,12 +5,19 @@ turn(E,O) :- load(turn(E,O)).
 shared_resource(A,B) :- load(shared_resource(A,B)).
 global(T) :- load(global(T)).
 % load train info
-end(A,B,C+D) :- load(end(A,B,C)), D = #max{D': malfunction(_,D',_)}.
+original_end(A,B,C) :- load(original_end(A,B,C)).
+end(A,B,C+D) :- load(original_end(A,B,C)), biggestsum(D).
 train(A) :- load(train(A)).
 start(A,B,C,D) :- load(start(A,B,C,D)).
 first_vertex(A,B) :- load(first_vertex(A,B)).
 last_vertex(A,B) :- load(last_vertex(A,B)).
 
+% save malfunction to use for extending time
+save(old_malfunction(A,B,C)) :- malfunction(A,B,C).
+old_malfunction(A,B,C) :- load(old_malfunction(A,B,C)).
+old_malfunction(A,B,C) :- malfunction(A,B,C).
+trainsum(A,S) :- train(A), S = #sum{D+1,T: old_malfunction(A,D,T)}.
+biggestsum(S) :- S = #max{S': trainsum(A,S')}.
 
 % if a malfunction affects the future this is saved as persist
 save(persist(V,A,T)) :- persist(V,A,T).
