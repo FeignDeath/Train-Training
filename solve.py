@@ -21,7 +21,7 @@ from clingo.application import Application, clingo_main
 
 # rendering visualizations
 from flatland.utils.rendertools import RenderTool
-from flatland.envs.rail_env import TrainState
+from flatland.envs.rail_env import TrainState, RailEnvActions
 import imageio.v2 as imageio
 from PIL import Image, ImageDraw, ImageFont
 
@@ -273,8 +273,13 @@ def main():
             for a in actions[timestep]:
                 log.add(f'{a};{timestep};{env.agents[a].position};{dir_map[env.agents[a].direction]};{state_map[env.agents[a].state]};{action_map[actions[timestep][a]]}\n')
 
+            current = actions[timestep]
+            for a in current:
+                if not env.agents[a].position and current[a] == RailEnvActions.STOP_MOVING:
+                    current[a] = RailEnvActions.DO_NOTHING
+
             print(timestep)
-            _, _, done, info = env.step(actions[timestep])
+            _, _, done, info = env.step(current)
 
             # end if simulation is finished
             if done['__all__'] and timestep < len(actions)-1:
