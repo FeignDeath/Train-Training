@@ -12,7 +12,7 @@ first_vertex(A,B) :- load(first_vertex(A,B)).
 last_vertex(A,B) :- load(last_vertex(A,B)).
 
 
-% if a malfunction affects the future this is saved as persist
+% if a malfunction affects the future this is saved as persist and always enforced
 save(persist(V,A,T)) :- persist(V,A,T).
 persist(V,A,T) :- load(persist(V,A,T)).
 at(V,A,T) :- persist(V,A,T).
