@@ -21,7 +21,8 @@ is necessary to integrate Python and ASP.
 - 📁 `modules` which contains scripts that assist in bridging the gap between Python and clingo
 - 📁 `output` which contains animated visualizations and performance statistics from generated paths
 - 📝 `build.py` which is used to build user-specified environments
-- 📝 `solve.py` which is used to ground and solve encodings, and produce an animated visualization of the resulting paths
+- 📝 `solve.py` which is used to ground and solve encodings, and produce an animated visualization of the resulting paths, while writing to log.csv in output all relevant stats
+- 📝 `benchmark.py` which is used to mass call solve.py with a params.py (found in encodings) file and a directory, for benchmarking
 
 <br>
 
@@ -109,16 +110,28 @@ Each of them is a set of file paths to the desired encodings, for example:
 ```
 primary=['asp/graph_based/actions.lp','asp/graph_based/graph.lp','asp/graph_based/traverse.lp']
 secondary=['asp/vsrp/replan.lp']
+
 ```
 
-The `primary` parameter is necessary, and is the standard suite of path planning encodings that return the appropriate `action(...)` output.  The `secondary` parameter is optional, and is primarily used when malfunctions are present in an environment.  Developers may choose to create a set of secondary encodings that help the replanning process necessary when faced with a train that has stalled.  For instance, it may be more efficient to consider the existing plan than to replan from the start.  More information about this is available in the 📁 `doc` folder.  If malfunctions are active and no `secondary` encoding is provided, the tooltik will call the `primary` set of encodings.
+The `primary` parameter is necessary, and is the standard suite of path planning encodings that return the appropriate `action(...)` output.  The `secondary` parameter is optional, and is primarily used when malfunctions are present in an environment.  Developers may choose to create a set of secondary encodings that help the replanning process necessary when faced with a train that has stalled.  For instance, it may be more efficient to consider the existing plan than to replan from the start.  More information about this is available in the 📁 `doc` folder.  If malfunctions are active and no `secondary` encoding is provided, the toolkit will call the `primary` set of encodings.
 
-From the command line, call `python solve.py` along with a path to the `.pkl` form of the environment to test on, for example:
+From the command line, call `python solve.py` along with a path to `params.py`  and the `.pkl` form of the environment to test on, for example:
 ```
-python solve.py envs/pkl/test.pkl
+python solve.py asp/paramsy.py envs/pkl/test.pkl
 ```
+- it might get the `--no-render` flag to suppress the rendering behavior
+- it might get the `--no-horizon` flat to suppress the ending of instances
 
 If successful, the output will be saved as a `.gif` (which by the way is pronounced [/dʒɪf/](https://www.abc.net.au/news/2018-08-10/is-it-pronounced-gif-or-jif/10102374) according to the creator of the format) animation, as well as a log file that details at each step what occurred in the simulation.
+
+---
+
+#### 📋 Benchmarking
+
+To benchmark simply run, where `n` is the number of parallel processes to use. This programm automatically, gets all instances in envs/testing_instances and all params.py in asp, to automatically call solve.py. It automatically passes --no-render and --no-horizon to solve.py.
+```
+python benchmark.py n
+```
 
 ---
 
