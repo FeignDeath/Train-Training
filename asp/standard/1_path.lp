@@ -1,45 +1,18 @@
-%% generating ordered cyclefree paths
+% allow transition on map
+{at(V,A,T): first_vertex(A,V), start(A,_,ST,_), T-1>=ST, T-1>=1, time(T)} :- at(vertex(start),A,T-1).
+% a train can stay at the same place
+{at(V,A,T)} :- at(V,A,T-1), time(T).
+% a train may move to a different place if a vertex allows it to
+{at(V2,A,T)} :- at(V1,A,T-1), edge(V1,V2), time(T). 
+% if a train reaches its goal it leaves the map
+at(vertex(end),A,T) :- at(V,A,T-1), last_vertex(A,V), time(T). 
 
-% move to enter the map
-move(A,vertex(start),U) :- first_vertex(A,U).
-% move to leave the map
-1 {move(A,V,vertex(end)): last_vertex(A,V)} 1 :- agent(A).
+% ensure no duplicate options are choosen
+:- 2{at(V,A,T)}, train(A), time(T).
 
-% choice rule for moves, only one is needed
-% every vertex may be left via up to une move
-{move(A,U,V): edge(U,V)} 1 :- agent(A), edge(U,_).
-% every move may have a follow up move
-% {move(A,U,V): edge(U,V)} 1 :- move(A,_,U).
+% enforce vertex, edge and swap constraints
+:- at(V1,A,T), at(V2,B,T), A<B, shared_resource(V1,V2).
+:- at(V1,A,T), at(V2,A,T+1), at(V3,B,T), at(V4,B,T+1), A<B, shared_resource(edge(V1,V2),edge(V3,V4)).
 
-% all moves except the start one, must have one before them
-:- move(A,U,_), not move(A,_,U), U!=vertex(start).
-% all moves except the last one, must have one after them
-:- move(A,_,V), not move(A,V,_), V!=vertex(end).
-
-% every move has no more than 1 leading up to it
-:- move(A,V,_), 2 {move(A,_,V)}.
-
-%% ensuring goals are reached and conflicts enforced
-
-% choose who gets priority
-1 {resolve((A,U),(B,V)); resolve((B,V),(A,U))} 1 :- move(A,_,U), move(B,_,V), shared_resource(U,V), A<B.
-
-#edge((A,U),(A,V)) : move(A,U,V).
-#edge((A,V),(B,W)) : resolve((A,U),(B,W)), move(A,U,V).
-
-% the goal must be reached in time
-goal(A) :- state(A,vertex(end),_), agent(A).
-:- agent(A), not goal(A).
-
-%% generating a path from the moveset before
-
-% start vertex at earliest possible timestep
-state(A,vertex(start),0) :- agent(A).
-:- state(A,V,T), V!=vertex(start), T <= #max{T': start(A,_,T',_); 1}.
-
-% an agent may wait or continue along his path
-{state(A,U,T)} :- state(A,U,T-1), move(A,U,V), T<=L, end(A,_,L).
-state(A,V,T) :- state(A,U,T-1), move(A,U,V), not state(A,U,T), T<=L, end(A,_,L).
-
-% agent must conform the the ordering
-:- resolve((A,U),(B,W)), move(A,U,V), state(A,V,T1), state(B,W,T2), T1>T2.
+% all trains must have ended their task
+:- train(A), not at(vertex(end),A,_).

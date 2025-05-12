@@ -1,4 +1,6 @@
-#const imax = 1.
+% small conversion to make it work
+at(V,A,T) :- state(A,V,T).
+
 % action given to start
 a(A,2,T) :- not at(vertex(start),A,T+1), at(vertex(start),A,T).
 % stop action if an agent waits
