@@ -34,7 +34,8 @@ goal(A) :- state(A,vertex(end),_), agent(A).
 %% generating a path from the moveset before
 
 % start vertex at earliest possible timestep
-state(A,vertex(start),T) :- T = #max{T': start(A,_,T',_); 1}, agent(A).
+state(A,vertex(start),0) :- agent(A).
+:- state(A,V,T), V!=vertex(start), T <= #max{T': start(A,_,T',_); 1}.
 
 % an agent may wait or continue along his path
 {state(A,U,T)} :- state(A,U,T-1), move(A,U,V), T<=L, end(A,_,L).
