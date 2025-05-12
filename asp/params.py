@@ -1,2 +1,2 @@
-primary=['asp/graph_reschedule/0_input.lp','asp/graph_reschedule/1_path.lp','asp/graph_reschedule/2_output.lp']
+primary=['asp/standard/0_input.lp','asp/standard/1_path.lp','asp/standard/2_output.lp']
 secondary=[]
