@@ -36,23 +36,4 @@ move(A,vertex(start),U) :- first_vertex(A,U).
 % goal needs to be reached in time
 &diff{(A,U)-0} <= T :- end(A,_,T), move(A,U,vertex(end)).
 
-
-% #edge((A,U),(A,V)) : move(A,U,V).
-% #edge((A,V),(B,W)) : resolve((A,U),(B,W)), move(A,U,V).
-
-% the goal must be reached in time
-goal(A) :- state(A,vertex(end),_), agent(A).
-:- agent(A), not goal(A).
-
-%% generating a path from the moveset before
-
-% start vertex at earliest possible timestep
-state(A,vertex(start),0) :- agent(A).
-:- state(A,V,T), V!=vertex(start), T <= #max{T': start(A,_,T',_); 1}.
-
-% an agent may wait or continue along his path
-{state(A,U,T)} :- state(A,U,T-1), move(A,U,V), T<=L, end(A,_,L).
-state(A,V,T) :- state(A,U,T-1), move(A,U,V), not state(A,U,T), T<=L, end(A,_,L).
-
-% agent must conform the the ordering
-:- resolve((A,U),(B,W)), move(A,U,V), state(A,V,T1), state(B,W,T2), T1>T2.
+#show turn/2.
