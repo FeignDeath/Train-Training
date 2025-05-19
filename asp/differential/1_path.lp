@@ -1,3 +1,4 @@
+#program base.
 %% generating ordered cyclefree paths
 
 % move to enter the map

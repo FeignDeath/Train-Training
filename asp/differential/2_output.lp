@@ -1,3 +1,4 @@
+#program next.
 % reconstruct timestep path
 at(V,A,T) :- dl((A,V),T).
 at(V,A,T) :- at(V,A,T-1), not at(V',A,T), V!=V', at(V',A,T'), T'>T.
@@ -15,4 +16,5 @@ a(A,2,T) :- at(V,A,T), not at(V,A,T+1), not a(A,1,T), not a(A,3,T), at(_,A,T+1).
 output(1,move_left).output(2,move_forward).output(3,move_right).output(4,wait).
 action(train(A),O',T) :- a(A,O,T), output(O,O').
 
-#show action/3.
+#show.
+#show action(A,B,C) : action(A,B,C), next_mode.

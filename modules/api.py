@@ -10,7 +10,7 @@ from clingo.ast import parse_string, parse_files, ProgramBuilder
 from clingodl import ClingoDLTheory
 
 def extract_program_names(filenames):
-    program_names = ["base"]
+    program_names = []
     
     for filename in filenames:
         try:
@@ -20,12 +20,15 @@ def extract_program_names(filenames):
                     if line.startswith('#program '):
                         # Extract the program name by stripping the line
                         program_name = line[len('#program '):].strip()[:-1]
-                        program_names.append(program_name)
+                        if not program_name in program_names:
+                            program_names.append(program_name)
         except FileNotFoundError:
             print(f"File not found: {filename}")
         except Exception as e:
             print(f"An error occurred while reading {filename}: {e}")
     
+    if not "base" in program_names:
+        program_names.append("base")
     program_names.sort()
     return program_names
 
@@ -136,6 +139,9 @@ class FlatlandPlan(Application):
                 previous = ""
                 for a in models[-1]:
                     previous += str(a) + "."
+                
+                print(p)
+                print(previous)
             
         self.action_list = build_action_list(models)
         self.save_context = build_context_from_save(models)
