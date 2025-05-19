@@ -42,7 +42,7 @@ def convert_to_clingo(env) -> str:
 
 def convert_formers_to_clingo(actions) -> str:
     # change back to the clingo names
-    mapping = {RailEnvActions.MOVE_FORWARD:"move_forward", RailEnvActions.MOVE_RIGHT:"move_right", RailEnvActions.MOVE_LEFT:"move_left", RailEnvActions.STOP_MOVING:"wait"}
+    mapping = {RailEnvActions.MOVE_FORWARD:"move_forward", RailEnvActions.MOVE_RIGHT:"move_right", RailEnvActions.MOVE_LEFT:"move_left", RailEnvActions.STOP_MOVING:"wait", "nothing":RailEnvActions.DO_NOTHING}
     for index, dict in enumerate(actions):
         for key in dict.keys():
             actions[index][key] = mapping[actions[index][key]]
@@ -62,15 +62,15 @@ def convert_malfunctions_to_clingo(malfs, timestep) -> str:
     for m in malfs:
         train, duration = m[0], m[1]
         facts.append(f'malfunction({train},{duration},{timestep}).\n')
-        for t in range(timestep+1, timestep+1+m[1]): # remove: make sure this duration should be included (aka remove +1 or keep it?)
-            facts.append(f':- not action(train({train}),wait,{t}).\n') #remove: can this be a list of strings or should it be one long string?
+        # for t in range(timestep+1, timestep+1+m[1]): # remove: make sure this duration should be included (aka remove +1 or keep it?)
+        #     facts.append(f':- not action(train({train}),wait,{t}).\n') #remove: can this be a list of strings or should it be one long string?
 
     return(facts)
 
 
 def convert_futures_to_clingo(actions) -> str:
     # change back to the clingo names
-    mapping = {RailEnvActions.MOVE_FORWARD:"move_forward", RailEnvActions.MOVE_RIGHT:"move_right", RailEnvActions.MOVE_LEFT:"move_left", RailEnvActions.STOP_MOVING:"wait"}
+    mapping = {RailEnvActions.MOVE_FORWARD:"move_forward", RailEnvActions.MOVE_RIGHT:"move_right", RailEnvActions.MOVE_LEFT:"move_left", RailEnvActions.STOP_MOVING:"wait", "nothing":RailEnvActions.DO_NOTHING}
     for index, dict in enumerate(actions):
         for key in dict.keys():
             actions[index][key] = mapping[actions[index][key]]
@@ -84,7 +84,7 @@ def convert_futures_to_clingo(actions) -> str:
     return(facts)
 
 def convert_actions_to_flatland(actions) -> list:
-    mapping = {"move_forward":RailEnvActions.MOVE_FORWARD, "move_right":RailEnvActions.MOVE_RIGHT, "move_left":RailEnvActions.MOVE_LEFT, "wait":RailEnvActions.STOP_MOVING}
+    mapping = {"move_forward":RailEnvActions.MOVE_FORWARD, "move_right":RailEnvActions.MOVE_RIGHT, "move_left":RailEnvActions.MOVE_LEFT, "wait":RailEnvActions.STOP_MOVING, "nothing":RailEnvActions.DO_NOTHING}
     for index, dict in enumerate(actions):
         for key in dict.keys():
             actions[index][key] = mapping[actions[index][key]]

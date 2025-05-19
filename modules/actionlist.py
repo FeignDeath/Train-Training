@@ -9,7 +9,6 @@ def to_dicts(action_list):
     this is more consistent with the structure that flatland accepts
     """
     result = []
-
     current_time_step = action_list[0][2]
     current_dict = {}
 
@@ -25,14 +24,29 @@ def to_dicts(action_list):
     result.append(current_dict)
 
     # replace actions with RailEnvActions
-    mapping = {"move_forward":RailEnvActions.MOVE_FORWARD, "move_right":RailEnvActions.MOVE_RIGHT, "move_left":RailEnvActions.MOVE_LEFT, "wait":RailEnvActions.STOP_MOVING}
     return(convert_actions_to_flatland(result))
 
+def build_context_from_save(models):
+    """
+    given a model from clingo, build a list of saved atoms
+    """
+    if models == []:
+        return None
+    save_list = []
+    for func in models[0]: # only the first model
+        func_name = func.name
+        if func_name == "save":
+            context = func.arguments[0]
+            save_list.append(f"load({context}).\n")
+
+    return(save_list)
 
 def build_action_list(models):
     """
     given a model from clingo, build an python action list
     """
+    if models == []:
+        return None
     action_list = []
     for func in models[0]: # only the first model
         func_name = func.name
@@ -44,3 +58,4 @@ def build_action_list(models):
 
     sorted_list = sorted(action_list, key=lambda x: (x[2], x[0]))
     return(to_dicts(sorted_list))
+
