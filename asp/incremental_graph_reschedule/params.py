@@ -1,2 +1,2 @@
-primary = ["asp/incremental/primary.lp"]
-secondary = ["asp/incremental/secondary.lp"]
+primary = ["asp/incremental_graph_reschedule/primary.lp"]
+secondary = ["asp/incremental_graph_reschedule/secondary.lp"]

@@ -28,4 +28,4 @@ save(start(A,B,C,D)) :- start(A,B,C,D).
 save(at(V,A,T)) :- at(V,A,T).
 
 
-#show.
+#show action/3.
