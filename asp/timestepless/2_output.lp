@@ -14,20 +14,4 @@ a(A,2,T) :- at(V,A,T), not at(V,A,T+1), not a(A,1,T), not a(A,3,T), at(_,A,T+1).
 output(1,move_left).output(2,move_forward).output(3,move_right).output(4,wait).
 action(train(A),O',T) :- a(A,O,T), output(O,O').
 
-% save map
-save(vertex(P,Q)) :- vertex(P,Q).
-save(edge(U,V)) :- edge(U,V).
-save(turn(E,O)) :- turn(E,O).
-save(shared_resource(A,B)) :- shared_resource(A,B).
-save(global(T)) :- global(T).
-save(first_vertex(A,B)) :- first_vertex(A,B).
-save(last_vertex(A,B)) :- last_vertex(A,B).
-
-% train information
-save(end(A,B,C)) :- end(A,B,C).
-save(train(T)) :- train(T).
-save(start(A,B,C,D)) :- start(A,B,C,D).
-save(at(V,A,T)) :- at(V,A,T).
-
-
 #show.
