@@ -190,7 +190,7 @@ def save_stats(instance_name, primary, secondary, width, height, targets, malfun
             writer.writerow(header)
         writer.writerow(row)
 
-def entry_exists(instance_name, primary, secondary, horizon, filename="output/log.csv"):
+def entry_exists(instance_name, primary, horizon, filename="output/log.csv"):
     if not os.path.isfile(filename):
         return False
 
@@ -198,14 +198,8 @@ def entry_exists(instance_name, primary, secondary, horizon, filename="output/lo
         reader = csv.reader(file)
         next(reader)  # Skip header
         for row in reader:
-            if row[0] == instance_name and row[1] == str(primary) and row[2] == str(secondary):
-                if horizon == None:
-                    if row[9] == "":
-                        return True
-                else:
-                    print
-                    if row[9] == str(horizon):
-                        return True
+            if row[0] == instance_name and row[1] == str(primary) and row[9] == str(horizon):
+                return True
     return False
 
 
@@ -234,10 +228,10 @@ def main():
     log = OutputLogManager()
 
     if no_horizon:
-        if entry_exists(args.env[0], params.primary, params.secondary, None):
+        if entry_exists(args.env[0], params.primary, ""):
             raise Exception("Already evaluated.")
     else:
-        if entry_exists(args.env[0], params.primary, params.secondary, env._max_episode_steps):
+        if entry_exists(args.env[0], params.primary, env._max_episode_steps):
             raise Exception("Already evaluated.")
 
     # envrionment rendering
@@ -279,11 +273,11 @@ def main():
             print(timestep)
             _, _, done, info = env.step(current)
 
-            # end if simulation is finished
-            if done['__all__'] and timestep < len(actions)-1:
-                end = True
-                warnings.warn('Simulation has reached its end before actions list has been exhausted.')
-                break
+            # # end if simulation is finished
+            # if done['__all__'] and timestep < len(actions)-1:
+            #     end = True
+            #     warnings.warn('Simulation has reached its end before actions list has been exhausted.')
+            #     break
 
             # check for new malfunctions
             new_malfs = mal.check(info)
@@ -390,7 +384,8 @@ def main():
         print(f"Failed due to: {failure_reason}.")
 
 if __name__ == "__main__":
-    # try:
-    main()
-    # except Exception as e:
-    #     warnings.warn(str(e))
+    try:
+        main()
+    except Exception as e:
+        warnings.warn(str(e))
+        exit
