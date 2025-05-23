@@ -62,20 +62,21 @@ class MalfunctionManager():
 
 
 class SimulationManager():
-    def __init__(self,env,primary,secondary=None):
+    def __init__(self,env,primary,secondary=None,output=None):
         self.env = env
         self.primary = primary
         if secondary is None:
             self.secondary = primary 
         else:
             self.secondary = secondary
+        self.output = output
 
         self.save_context = None
 
     def build_actions(self) -> list:
         """ create initial list of actions """
         # pass env, primary
-        app = FlatlandPlan(self.env, None)
+        app = FlatlandPlan(self.env, None, output_files=self.output)
         clingo_main(app, self.primary)
         self.save_context = app.save_context
         return(app.action_list, app.stats)
@@ -90,7 +91,7 @@ class SimulationManager():
     def update_actions(self, context) -> list:
         """ update list of actions following malfunction """
         # pass env, secondary, context
-        app = FlatlandPlan(self.env, context, supress_env=True)
+        app = FlatlandPlan(self.env, context, supress_env=True, output_files=self.output)
         clingo_main(app, self.secondary)
         self.save_context = app.save_context
         return(app.action_list, app.stats)
@@ -229,10 +230,7 @@ def main():
 
     # create manager objects
     mal = MalfunctionManager(env.get_num_agents())
-    if hasattr(params,"secondary") and params.secondary != []:
-        sim = SimulationManager(env, params.primary, params.secondary)
-    else:
-        sim = SimulationManager(env, params.primary, None)
+    sim = SimulationManager(env, params.primary, params.secondary, params.output)
     log = OutputLogManager()
 
     if no_horizon:
@@ -392,7 +390,7 @@ def main():
         print(f"Failed due to: {failure_reason}.")
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        warnings.warn(str(e))
+    # try:
+    main()
+    # except Exception as e:
+    #     warnings.warn(str(e))

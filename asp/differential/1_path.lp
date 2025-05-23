@@ -1,4 +1,3 @@
-#program base.
 %% generating ordered cyclefree paths
 
 % move to enter the map
@@ -30,10 +29,10 @@ move(A,vertex(start),U) :- first_vertex(A,U).
 % trains going first need to go first
 &diff{(A,U)-(B,V)} <= -1 :- resolve((A,U),(B,V)).
 
-% start can be generated from 1 onwards
-&diff{0-(A,vertex(start))} <= 1 :- agent(A).
+% the unspawned train exists from zero onwards
+&diff{(A,vertex(start))} = 0 :- agent(A).
 % no train can spawn earlier than allowed
-&diff{0-(A,U)} <= -T :- start(A,_,T,_), move(A,vertex(start),U).
+&diff{(A,U)} > T :- start(A,_,T,_), move(A,vertex(start),U).
 % goal needs to be reached in time
 &diff{(A,U)-0} <= T :- end(A,_,T), move(A,U,vertex(end)).
 

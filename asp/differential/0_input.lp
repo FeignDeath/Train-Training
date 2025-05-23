@@ -1,4 +1,3 @@
-#program base.
 %% Auxilliary Atoms
 % directions and their bit
 dir_bit(n,3).dir_bit(e,2).dir_bit(s,1).dir_bit(w,0).
@@ -14,7 +13,7 @@ agent(A) :- train(A).
 trackparts(Pos,D1,D2) :- cell(Pos,N), dir_bit(D1,N1), dir_bit(D2,N2),
     1 = ((N / 16**N1) \ 16 / 2**N2) \ 2.
 
-% generate direction free nodes
+% generate direction free nodes for the structure (At, From)
 vertex((X,Y),(X-X',Y-Y')) :- trackparts((X,Y),D,_), dir_move(D,(X',Y')).
 vertex(start).vertex(end).
 
