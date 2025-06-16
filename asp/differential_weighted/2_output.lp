@@ -23,8 +23,8 @@ a(A,0,T+N..T'-2) :- next(A,T,T'), at(V,A,T), at(U,A,T'), wedge(U,V,N).
 % % generate move action if a train continues moving
 % a(A,2,T) :- at(V,A,T), not at(V,A,T+1), not a(A,1,T), not a(A,3,T), at(_,A,T+1).
 
-% % translate all actions into the ouput
-% output(1,move_left).output(2,move_forward).output(3,move_right).output(4,wait).
-% action(train(A),O',T) :- a(A,O,T), output(O,O').
+% translate all actions into the ouput
+output(1,move_left).output(2,move_forward).output(3,move_right).output(4,wait).
+action(train(A),O',T) :- a(A,O,T), output(O,O').
 
-% #show action/3.
+#show action/3.
