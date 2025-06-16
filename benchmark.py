@@ -16,7 +16,7 @@ def find_params_dirs():
 def find_pkl_files():
     """Find all .pkl files in envs/testing_instances and subdirectories."""
     pkl_files = []
-    for root, dirs, files in os.walk('envs/testing_instances'):
+    for root, dirs, files in os.walk('envs/pkl'):
         for file in files:
             if file.endswith('.pkl'):
                 pkl_files.append(os.path.join(root, file))

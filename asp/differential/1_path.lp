@@ -25,9 +25,10 @@ move(A,vertex(start),U) :- first_vertex(A,U).
 1 {resolve((A,U),(B,V)); resolve((B,V),(A,U))} 1 :- move(A,_,U), move(B,_,V), shared_resource(U,V), A<B.
 
 % previous moves need previous timesteps
-&diff{(A,U)-(A,V)} <= -1 :- move(A,U,V).
-% trains going first need to go first
-&diff{(A,U)-(B,V)} <= -1 :- resolve((A,U),(B,V)).
+&diff{(A,U)+1} <= (A,V) :- move(A,U,V).
+% trains going first need to be gone before the next enters the field
+%   this is to strict and also forbids follow up conflicts, which in turn dissallows swap conflicts
+&diff{(A,W)+1} <= (B,V) :- resolve((A,U),(B,V)), move(A,U,W).
 
 % the unspawned train exists from zero onwards
 &diff{(A,vertex(start))} = 0 :- agent(A).
