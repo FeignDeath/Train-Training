@@ -145,6 +145,7 @@ def get_args():
     parser.add_argument('env', type=str, default='', nargs=1, help='the Flatland environment as a .pkl file')
     parser.add_argument('--no-render', action='store_true', help='if included, run the Flatland simulation but do not render a GIF')
     parser.add_argument('--no-horizon', action='store_true', help='if included, run the Flatland simulation with no instance ending')
+    parser.add_argument('--no-output', action='store_true', help='if included, supress the csv output on finish')
     return(parser.parse_args())
 
 def save_stats(instance_name, primary, secondary, width, height, targets, malfunction_rate, seed, trains, horizon, timesteps, primary_stats, secondary_stats, success, reason, filename="output/log.csv"):
@@ -221,6 +222,7 @@ def main():
     params = import_module(args.enc[0])
     no_render = args.no_render
     no_horizon = args.no_horizon
+    no_output = args.no_output
 
     # create manager objects
     mal = MalfunctionManager(env.get_num_agents())
@@ -270,7 +272,7 @@ def main():
                 if not env.agents[a].position and current[a] == RailEnvActions.STOP_MOVING:
                     current[a] = RailEnvActions.DO_NOTHING
 
-            print(timestep)
+            if not no_render : print(timestep)
             _, _, done, info = env.step(current)
 
             # # end if simulation is finished
@@ -340,16 +342,17 @@ def main():
             if all(info["state"][i] == TrainState.DONE for i in info["state"]):
                 break
 
-        # get time stamp for gif and output log
-        stamp = time.time()
-        os.makedirs(f"output/{stamp}", exist_ok=True)
+        if not no_output:
+            # get time stamp for gif and output log
+            stamp = time.time()
+            os.makedirs(f"output/{stamp}", exist_ok=True)
 
-        # combine images into gif
-        if not no_render:
-            imageio.mimsave(f"output/{stamp}/animation.gif", images, format='GIF', loop=0, duration=240)
+            # combine images into gif
+            if not no_render:
+                imageio.mimsave(f"output/{stamp}/animation.gif", images, format='GIF', loop=0, duration=240)
 
-        # save output log
-        log.save(stamp)
+            # save output log
+            log.save(stamp)
 
         success = all(info["state"][i] == TrainState.DONE for i in info["state"])
     
@@ -360,23 +363,24 @@ def main():
             failure_reason = "Mismatching Actions"
 
     # save stats
-    save_stats(
-        args.env[0],
-        params.primary,
-        params.secondary,
-        env.width,
-        env.height,
-        len(set(agent.target for agent in env.agents)),
-        env.malfunction_generator.MFP.malfunction_rate,
-        env._seed()[0],
-        env.number_of_agents,
-        env._max_episode_steps,
-        env._elapsed_steps,
-        primary_stats,
-        secondary_stats,
-        success,
-        failure_reason
-        )
+    if not no_output:
+        save_stats(
+            args.env[0],
+            params.primary,
+            params.secondary,
+            env.width,
+            env.height,
+            len(set(agent.target for agent in env.agents)),
+            env.malfunction_generator.MFP.malfunction_rate,
+            env._seed()[0],
+            env.number_of_agents,
+            env._max_episode_steps,
+            env._elapsed_steps,
+            primary_stats,
+            secondary_stats,
+            success,
+            failure_reason
+            )
     
     if success:
         print("Successful run!")
