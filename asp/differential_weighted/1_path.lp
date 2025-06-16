@@ -28,7 +28,7 @@ move(A,vertex(start),U) :- first_vertex(A,U).
 &diff{(A,U)+N} <= (A,V) :- move(A,U,V), wedge(U,V,N).
 % trains going first need to be gone before the next enters the field
 %   this is to strict and also forbids follow up conflicts, which in turn dissallows swap conflicts
-&diff{(A,W)+N} <= (B,V) :- resolve((A,U),(B,V)), move(A,U,W), edge(U,W,N).
+&diff{(A,W)+N} <= (B,V) :- resolve((A,U),(B,V)), move(A,U,W), wedge(U,W,N).
 
 % the unspawned train exists from zero onwards
 &diff{(A,vertex(start))} = 0 :- agent(A).
@@ -39,3 +39,4 @@ move(A,vertex(start),U) :- first_vertex(A,U).
 &diff{(A,U)-0} <= T :- end(A,_,T), move(A,U,vertex(end)).
 
 #show turn/2.
+#show wedge/3.

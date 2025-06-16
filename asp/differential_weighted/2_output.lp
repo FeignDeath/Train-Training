@@ -1,21 +1,30 @@
-% reconstruct timestep path
 at(V,A,T) :- dl((A,V),T).
-
-% fill the gaps
 next(A,T,T') :- at(V,A,T), at(V',A,T'), V!=V', T<T', V=VBetween: at(VBetween,A,T+1..T'-1).
-at(V,A,C) :- at(V,A,T), next(A,T,T'), C=T+1..T'-1.
 
-% action given to start
-a(A,2,T) :- not at(vertex(start),A,T+1), at(vertex(start),A,T).
-% stop action if an agent waits
-a(A,4,T) :- at(V,A,T+1), at(V,A,T).
-% generate turns if necessary
-a(A,O,T) :- at(V,A,T), at(V',A,T+1), turn(edge(V,V'),O).
-% generate move action if a train continues moving
-a(A,2,T) :- at(V,A,T), not at(V,A,T+1), not a(A,1,T), not a(A,3,T), at(_,A,T+1).
+a(A,O,T) :- next(A,T,T'), at(U,A,T), at(V,A,T'), turn(wedge(U,V,_),O).
+a(A,2,T) :- next(A,T,T'), at(U,A,T), at(V,A,T'), not turn(wedge(U,V,_),_).
+a(A,2,T+1..T+N-1) :- next(A,T,T'), at(V,A,T), at(U,A,T'), wedge(U,V,N).
+a(A,2,T'-1) :- next(A,T,T'), at(V,A,T), at(U,A,T'), wedge(U,V,N).
+a(A,0,T+N..T'-2) :- next(A,T,T'), at(V,A,T), at(U,A,T'), wedge(U,V,N).
 
-% translate all actions into the ouput
-output(1,move_left).output(2,move_forward).output(3,move_right).output(4,wait).
-action(train(A),O',T) :- a(A,O,T), output(O,O').
+% % reconstruct timestep path
+% at(V,A,T) :- dl((A,V),T).
 
-#show action/3.
+% % fill the gaps
+% next(A,T,T') :- at(V,A,T), at(V',A,T'), V!=V', T<T', V=VBetween: at(VBetween,A,T+1..T'-1).
+% at(V,A,C) :- at(V,A,T), next(A,T,T'), C=T+1..T'-1.
+
+% % action given to start
+% a(A,2,T) :- not at(vertex(start),A,T+1), at(vertex(start),A,T).
+% % stop action if an agent waits
+% a(A,4,T) :- at(V,A,T+1), at(V,A,T).
+% % generate turns if necessary
+% a(A,O,T) :- at(V,A,T), at(V',A,T+1), turn(edge(V,V'),O).
+% % generate move action if a train continues moving
+% a(A,2,T) :- at(V,A,T), not at(V,A,T+1), not a(A,1,T), not a(A,3,T), at(_,A,T+1).
+
+% % translate all actions into the ouput
+% output(1,move_left).output(2,move_forward).output(3,move_right).output(4,wait).
+% action(train(A),O',T) :- a(A,O,T), output(O,O').
+
+% #show action/3.
