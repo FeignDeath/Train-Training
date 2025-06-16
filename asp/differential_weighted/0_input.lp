@@ -1,3 +1,4 @@
+#const imax=1.
 %% Auxilliary Atoms
 % directions and their bit
 dir_bit(n,3).dir_bit(e,2).dir_bit(s,1).dir_bit(w,0).
@@ -42,11 +43,6 @@ turn(wedge(U,W,N),3) :- wedge(U,W,N), twedge(U,W,N,V),
     U = vertex((X2,Y2),(X1,Y1)),
     V = vertex((X3,Y3),(X2,Y2)),
     0 > (X2-X1)*(Y3-Y2) - (Y2-Y1)*(X3-X2).
-
-% wedge(vertex((X2,Y2),(X1,Y1)),vertex((X3,Y3),(X2,Y2))),
-%     0 < (X2-X1)*(Y3-Y2) - (Y2-Y1)*(X3-X2).
-% turn(edge(vertex((X2,Y2),(X1,Y1)),vertex((X3,Y3),(X2,Y2))),3) :- edge(vertex((X2,Y2),(X1,Y1)),vertex((X3,Y3),(X2,Y2))),
-%     0 > (X2-X1)*(Y3-Y2) - (Y2-Y1)*(X3-X2).
 
 % generate shared resources
 shared_resource(vertex(At,From1),vertex(At,From2)) :- vertex(At,From1), vertex(At,From2).
