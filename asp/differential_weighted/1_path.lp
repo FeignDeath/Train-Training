@@ -36,7 +36,7 @@ move(A,vertex(start),U) :- first_vertex(A,U).
 &diff{(A,U)} > T :- start(A,_,T,_), move(A,vertex(start),U).
 &diff{(A,U)} > 1 :- start(A,_,T,_), move(A,vertex(start),U).
 % goal needs to be reached in time
-&diff{(A,U)-0} <= T+50 :- end(A,_,T), move(A,U,vertex(end)).
+&diff{(A,U)-0} <= T :- end(A,_,T), move(A,U,vertex(end)).
 
 % #show turn/2.
 % #show wedge/3.
