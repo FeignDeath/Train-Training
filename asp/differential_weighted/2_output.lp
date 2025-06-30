@@ -55,13 +55,3 @@ action(train(A),O',T) :- a(A,O,T), output(O,O').
 :- next(A,T1,T2), T=T1..T2-1, not a(A,_,T).
 
 #show action/3.
-% #show dl(B,C) : dl((0,vertex(B,_)),C).
-% #show dl/2.
-% #show error/2.
-% % #show error/4.
-% % #show error(A) : error(0,A).
-% % % #show error(A,B,C) : error(1,A,B,C).
-% #show dl(A,B) : dl((0,vertex(A,_)),B).
-% #show dl(start,B) : dl((0,vertex(start)),B).
-#show.
-% #show before/4.
