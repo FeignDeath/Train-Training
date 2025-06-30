@@ -44,6 +44,8 @@ turn(wedge(U,W,N),3) :- wedge(U,W,N), twedge(U,W,N,V),
     V = vertex((X3,Y3),(X2,Y2)),
     0 > (X2-X1)*(Y3-Y2) - (Y2-Y1)*(X3-X2).
 
+turn(wedge(U,W,N),2) :- wedge(U,W,N), not turn(wedge(U,W,N),1), not turn(wedge(U,W,N),3).
+
 % generate shared resources
 shared_resource(vertex(At,From1),vertex(At,From2)) :- vertex(At,From1), vertex(At,From2).
 shared_resource(edge(V1,V2),edge(V3,V4)) :- edge(V1,V2), edge(V3,V4),
