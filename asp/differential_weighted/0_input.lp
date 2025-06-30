@@ -26,20 +26,21 @@ edge(vertex((X2,Y2),(X1,Y1)),vertex((X3,Y3),(X2,Y2))) :- vertex((X2,Y2),(X1,Y1))
 
 % combine them into weighted edges, by agglomorating them
 % the temporary twedge has (start, end, duration, second step)
-twedge(U,V,1,V) :- edge(U,V).
-twedge(U,W,M+N,X) :- twedge(U,V,M,X), twedge(V,W,N,_), {shared_resource(V,_); start(_,T,_,_): V = vertex(T,_); end(_,T,_): V = vertex(T,_)} 2.
-kill(U,V,M) :- twedge(U,V,M,X), twedge(V,W,N,_), {shared_resource(V,_); start(_,T,_,_): V = vertex(T,_); end(_,T,_): V = vertex(T,_)} 2.
-kill(V,W,N) :- twedge(U,V,M,X), twedge(V,W,N,_), {shared_resource(V,_); start(_,T,_,_): V = vertex(T,_); end(_,T,_): V = vertex(T,_)} 2.
+twedge(U,V,1,U,V) :- edge(U,V).
+twedge(U,W,M+N,Y,X) :- twedge(U,V,M,_,X), twedge(V,W,N,Y,_), {shared_resource(V,_); start(_,T,_,_): V = vertex(T,_); end(_,T,_): V = vertex(T,_)} 2.
+kill(U,V,M) :- twedge(U,V,M,_,X), twedge(V,W,N,Y,_), {shared_resource(V,_); start(_,T,_,_): V = vertex(T,_); end(_,T,_): V = vertex(T,_)} 2.
+kill(V,W,N) :- twedge(U,V,M,_,X), twedge(V,W,N,Y,_), {shared_resource(V,_); start(_,T,_,_): V = vertex(T,_); end(_,T,_): V = vertex(T,_)} 2.
 
-wedge(U,V,N) :- twedge(U,V,N,X), not kill(U,V,N).
+wedge(U,V,N) :- twedge(U,V,N,Y,X), not kill(U,V,N).
+shared_resource(wedge(U,V,N),wedge(W,X,N)) :- twedge(U,V,N,U',V'), twedge(W,X,N,W',X'), shared_resource(U',X'), shared_resource(V',W').
 
 % check whether edges correspond to a turn
-turn(wedge(U,W,N),1) :- wedge(U,W,N), twedge(U,W,N,V),
+turn(wedge(U,W,N),1) :- wedge(U,W,N), twedge(U,W,N,X,V),
     U = vertex((X2,Y2),(X1,Y1)),
     V = vertex((X3,Y3),(X2,Y2)),
     0 < (X2-X1)*(Y3-Y2) - (Y2-Y1)*(X3-X2).
 
-turn(wedge(U,W,N),3) :- wedge(U,W,N), twedge(U,W,N,V),
+turn(wedge(U,W,N),3) :- wedge(U,W,N), twedge(U,W,N,X,V),
     U = vertex((X2,Y2),(X1,Y1)),
     V = vertex((X3,Y3),(X2,Y2)),
     0 > (X2-X1)*(Y3-Y2) - (Y2-Y1)*(X3-X2).
@@ -48,8 +49,6 @@ turn(wedge(U,W,N),2) :- wedge(U,W,N), not turn(wedge(U,W,N),1), not turn(wedge(U
 
 % generate shared resources
 shared_resource(vertex(At,From1),vertex(At,From2)) :- vertex(At,From1), vertex(At,From2).
-shared_resource(edge(V1,V2),edge(V3,V4)) :- edge(V1,V2), edge(V3,V4),
-    shared_resource(V1,V4), shared_resource(V2,V3).
 
 first_vertex(A,vertex((X,Y),(X-X',Y-Y'))) :- start(A,(X,Y),_,D), dir_move(D,(X',Y')).
 last_vertex(A,vertex(P,P')) :- end(A,P,_), vertex(P,P').
